@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habitsbangla/habit1.0/Habitmain.dart';
 import 'package:habitsbangla/habit1.0/ui/home/home_page.dart';
+import 'package:habitsbangla/habit2.0/habit2.0.dart';
 
 
 class HomePage2 extends StatelessWidget {
@@ -88,6 +89,41 @@ class HomePage2 extends StatelessWidget {
                               MaterialPageRoute(
 
                                 builder: (context) =>  MyApp1 (),
+                              ),
+                            );
+                          },
+                        ),
+
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+
+                        InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      'assets/chicken1.jpg'),
+                                ),
+                              ),
+                            ),
+
+
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+
+                                builder: (context) => MyApp3 (),
                               ),
                             );
                           },
