@@ -25,6 +25,7 @@ class HabitsDayList extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
+
                   child: Text(
                     controller.habits[controller.days[dayIndex].habits.keys.elementAt(i)]?.emoji ?? "‽",
                     style: Theme.of(context).textTheme.headline1!.copyWith(
@@ -46,6 +47,7 @@ class HabitsDayList extends StatelessWidget {
           },
           separatorBuilder: (ctx, i) => const Divider(indent: 30, endIndent: 30),
         );
+
       }
     );
   }

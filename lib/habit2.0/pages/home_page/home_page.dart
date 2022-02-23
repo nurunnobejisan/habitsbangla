@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:habitsbangla/habit1.0/Habitmain.dart';
 import 'package:habitsbangla/habit2.0/pages/home_page/calendar.dart';
 import 'package:habitsbangla/habit2.0/pages/home_page/day_box.dart';
 import 'package:habitsbangla/habit2.0/pages/home_page/habits_day_list.dart';
@@ -6,6 +10,8 @@ import 'package:habitsbangla/habit2.0/pages/home_page/home_page_controller.dart'
 import 'package:habitsbangla/habit2.0/pages/home_page/month_row.dart';
 import 'package:habitsbangla/habit2.0/pages/home_page/top_bar.dart';
 import 'package:habitsbangla/habit2.0/widgets/circular_button.dart';
+import 'package:habitsbangla/popmore/about%20me.dart';
+import 'package:habitsbangla/popmore/privacy_policy.dart';
 import 'package:provider/provider.dart';
 
 import 'day_box.dart';
@@ -25,12 +31,48 @@ class HomePage extends StatelessWidget {
             body: SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: [Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+
+                      InkWell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/chicken1.jpg'),
+                              ),
+                            ),
+                          ),
+
+
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+
+                              builder: (context) =>  MyApp1 (),
+                            ),
+                          );
+                        },
+                      ),
+
+                    ],
+                  ),
+                ),
+
                   TopBar(),
                   const MonthRow(),
                   SizedBox(
                     child: Calendar()
                   ),
+
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -40,13 +82,14 @@ class HomePage extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 35, right: 35, left: 35, bottom: 10),
                             child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(30),
                                 color: Theme.of(context).primaryColorLight
                               ),
                               padding: const EdgeInsets.only(top: 35),
                               child: const HabitsDayList(),
                             ),
                           ),
+
                           const Positioned(
                             left: 0,
                             top: 0,
@@ -65,11 +108,14 @@ class HomePage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                                 color: Theme.of(context).primaryColor
                               ),
+
                               child: CircularButton(
                                 onPressed: () => controller.showHabitsDialog(context),
                                 icon: const Icon(Icons.list),
                               )
+
                             )
+
                           )
                         ],
                       ),
@@ -82,5 +128,363 @@ class HomePage extends StatelessWidget {
         }
       ),
     );
+  }
+}
+
+class MyPopupMenu extends StatefulWidget {
+  final Widget child;
+
+  MyPopupMenu({Key? key, required this.child})
+      : assert(child.key != null),
+        super(key: key);
+
+  @override
+  _MyPopupMenuState createState() => _MyPopupMenuState();
+}
+
+class _MyPopupMenuState extends State<MyPopupMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: widget.child,
+      onTap: _showPopupMenu,
+    );
+  }
+
+  void _showPopupMenu() {
+
+    RenderBox renderBox = (widget.child.key as GlobalKey)
+        .currentContext
+        ?.findRenderObject() as RenderBox;
+    Offset position = renderBox.localToGlobal(Offset.zero);
+
+    showCupertinoDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return PopupMenuContent(
+            position: position,
+            size: renderBox.size,
+            onAction: (x) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                duration: const Duration(seconds: 1),
+                content: Text('Action => $x'),
+              ));
+            },
+          );
+        });
+  }
+}
+
+class PopupMenuContent extends StatefulWidget {
+  final Offset position;
+  final Size size;
+  final ValueChanged<String>? onAction;
+
+  const PopupMenuContent(
+      {Key? key, required this.position, required this.size, this.onAction})
+      : super(key: key);
+
+  @override
+  _PopupMenuContentState createState() => _PopupMenuContentState();
+}
+
+class _PopupMenuContentState extends State<PopupMenuContent>
+    with SingleTickerProviderStateMixin {
+  //Let's create animation
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      _animationController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        _closePopup("");
+        return false;
+      },
+      child: GestureDetector(
+        onTap: () => _closePopup(""),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Container(
+            height: double.maxFinite,
+            width: double.maxFinite,
+            color: Colors.transparent,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 0,
+                  right:
+                  (MediaQuery.of(context).size.width - widget.position.dx) -
+                      widget.size.width,
+                  top: widget.position.dy,
+                  child: AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: _animation.value,
+                        alignment: Alignment.topRight,
+                        child: Opacity(opacity: _animation.value, child: child),
+                      );
+                    },
+
+                    ///Popup Box...........
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        width: double.maxFinite,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 24),
+                        margin: const EdgeInsets.only(left: 64),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(.1),
+                                blurRadius: 8,
+                              )
+                            ]),
+                        child: Column(
+                          children: [
+                            //Repeat now
+
+                            ///About US..........
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const about()));
+                              },
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFFF0E3),
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    child: const Icon(
+                                      Icons.info_outlined,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text(
+                                    "About US",
+                                    style: TextStyle(
+                                        color: Colors.black.withOpacity(.7),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            ), //Edit workout
+                            const SizedBox(
+                              height: 16,
+                            ),
+
+                            ///Privacy Policy.....
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        const PrivacyPolicy()));
+                              },
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFE1E1FC),
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    child: const Icon(
+                                      Icons.privacy_tip_outlined,
+                                      color: Color(0xFF3840A2),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text(
+                                    "Privacy Policy",
+                                    style: TextStyle(
+                                        color: Colors.black.withOpacity(.7),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            ), //Share workout
+                            const SizedBox(
+                              height: 16,
+                            ),
+
+                            ///Share Now.........
+                            GestureDetector(
+                              onTap: () {},
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFDDF3FD),
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    child: const Icon(
+                                      Icons.share,
+                                      color: Color(0xFF0586C0),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text(
+                                    "Share Now",
+                                    style: TextStyle(
+                                        color: Colors.black.withOpacity(.7),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+
+                            ///Exit.............
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * .06,
+                              width: MediaQuery.of(context).size.width,
+                              child: ListTile(
+                                title: Text(
+                                  "Exit",
+                                  style: TextStyle(
+                                      color: Colors.black.withOpacity(.7),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                leading: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.greenAccent,
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(
+                                      Icons.exit_to_app_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              "Exit from রান্নার বই"),
+                                          content: const Text(
+                                              "Are you sure want to exit"),
+                                          actions: [
+                                            FlatButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text("No",
+                                                  style:
+                                                  TextStyle(fontSize: 20)),
+                                            ),
+                                            FlatButton(
+                                              onPressed: () {
+                                                exit(0);
+                                              },
+                                              child: const Text(
+                                                "Ok",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+
+                            ///getHelp...........
+                            GestureDetector(
+                              onTap: () => _closePopup("Upcoming"),
+                              child: Container(
+                                width: double.maxFinite,
+                                height: 70,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF7DA0A0),
+                                  borderRadius: BorderRadius.circular(32),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                          child: Image.asset(
+                                            "assets/images/logo.png",
+                                            height: 50,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _closePopup(String action) {
+    _animationController.reverse().whenComplete(() {
+      Navigator.of(context).pop();
+
+      if (action.isNotEmpty) widget.onAction?.call(action);
+    });
   }
 }

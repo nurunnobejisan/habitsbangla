@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:habitsbangla/habit1.0/constants/app_assets.dart';
 import 'package:habitsbangla/habit1.0/constants/app_colors.dart';
 import 'package:habitsbangla/habit1.0/ui/theming/app_theme.dart';
+import 'package:habitsbangla/habit2.0/habit2.0.dart';
 import 'package:habitsbangla/habit2.0/services/data_service.dart';
 import 'package:habitsbangla/habit2.0/services/theme_service.dart';
 import 'package:habitsbangla/habit2.0/widgets/life_cycle_handler.dart';
-import 'package:habitsbangla/home.dart';
 
 
 
@@ -41,7 +39,7 @@ class MyApp extends StatelessWidget {
       ),
       home: AppTheme(
         data: AppThemeData.defaultWithSwatch(AppColors.red),
-        child: const HomePage2(),
+        child: MyApp3(),
       ),
     );
   }

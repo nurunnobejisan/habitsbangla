@@ -20,6 +20,7 @@ class Calendar extends StatelessWidget {
   
         return Stack(
           children: [
+
             GestureDetector(
               onHorizontalDragEnd: controller.onSwipeCalendar,
               child: GridView.count(
@@ -33,6 +34,7 @@ class Calendar extends StatelessWidget {
                   if(index < initialWhites) {
                     return const SizedBox.shrink();
                   }
+
 
                   return GestureDetector(
                     onTap: () => controller.selectNewDay(index - initialWhites),
@@ -51,6 +53,7 @@ class Calendar extends StatelessWidget {
                 }),
               ),
             ),
+
             StreamBuilder<int>(
               stream: controller.selectedDayindex.stream,
               initialData: controller.selectedDayindex.value,
@@ -72,6 +75,7 @@ class Calendar extends StatelessWidget {
                 );
               }
             )
+
           ],
         );
       }

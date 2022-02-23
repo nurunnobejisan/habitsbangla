@@ -23,7 +23,7 @@ class MyApp3 extends StatelessWidget {
           child: MaterialApp(
               debugShowCheckedModeBanner: false,
             theme: snapshot.data,
-            home: HomePage()
+            home: const HomePage()
           ),
         );
       }
