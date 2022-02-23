@@ -35,7 +35,6 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-
                       InkWell(
                         child: Padding(
                           padding: const EdgeInsets.all(1.0),
@@ -62,6 +61,33 @@ class HomePage extends StatelessWidget {
                           );
                         },
                       ),
+                      InkWell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/chicken1.jpg'),
+                              ),
+                            ),
+                          ),
+
+
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+
+                              builder: (context) =>  MyApp1 (),
+                            ),
+                          );
+                        },
+                      ),
+
 
                     ],
                   ),

@@ -36,7 +36,7 @@ class TopBar extends StatelessWidget {
             icon: const Icon(Icons.settings_applications_outlined),
             padding: const EdgeInsets.all(10),
           ),
-          
+
         ],
       ),
     );

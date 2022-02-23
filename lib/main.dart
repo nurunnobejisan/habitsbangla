@@ -26,10 +26,12 @@ void main() async {
           resumeCallBack: () async => themeService.updateThemeStatus(themeService.themeStatus)
       )
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
