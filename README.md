@@ -2,6 +2,10 @@
 
 A habit tracking app for Bangla-language users: create habits, log days, and watch streaks build, with local storage and a theme that follows time of day.
 
+## Screenshot
+
+![Calendar and habit list](screenshots/home.png)
+
 ## Features
 
 - Create, edit, and delete habits with start periods and recurring schedules (v2.0 dialogs)
